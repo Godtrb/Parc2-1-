@@ -25,16 +25,16 @@ class ReinasApp:
         self.ventana.mainloop()
 
     def menu(self):
-        barra = tk.Menu(self.ventana, bg="dodger blue", fg="red", font=("Helvetica", 12))
-        opciones = tk.Menu(barra, tearoff=0)
+        barra = tk.Menu(self.ventana, bg="royal blue", fg="white", font=("Helvetica", 12))
+        opciones = tk.Menu(barra, tearoff=0, bg="royal blue", fg="red4", font=("Helvetica", 12) )
         opciones.add_command(label="Registrar Reina", command=self.registrar_Reina)
         opciones.add_command(label="Registrar Jurado", command=self.registrar_Jurado)
-        opciones.add_command(label="Registrar Jurado", command=self.registrar_calificacion)
-        opciones.add_command(label="Registrar Evaluacion", command=self.listar_Reinas)
+        opciones.add_command(label="Registrar Calificación", command=self.registrar_calificacion)
+        opciones.add_command(label="Listado de Reinas", command=self.listar_Reinas)
         opciones.add_command(label="Ver Ranking", command=self.ver_ranking)
         opciones.add_separator()
         opciones.add_command(label="Salir", command=self.ventana.quit)
-        barra.add_cascade(label="Opciones", menu=opciones)
+        barra.add_cascade(label="Opciones", menu=opciones )
         self.ventana.config(menu=barra)
 
     def registrar_Reina(self):
