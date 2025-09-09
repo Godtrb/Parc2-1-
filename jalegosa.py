@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from typing import Optional, Dict, List
 
 CRITERIOS = ["cultura", "proyección", "entrevista"]
 MUNICIPIOS = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepción Chiquirichapa",
@@ -8,31 +9,29 @@ MUNICIPIOS = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepc
               "Sibilia", "Zunil"]
 DATOS_RUTA_CANDIDATAS = "candidatas.txt"
 DATOS_RUTA_JURADOS = "jurados.txt"
-VALORES_PUNTAJE = [str(i) for i in range(0,11)]
+VALORES_CALIFICACION = [str(i) for i in range(0,11)]
 
 class Persona:
     def __init__(self, dpi, nombre: str, edad: int):
+        self.dpi = dpi
         self.nombre = nombre.strip()
         self.edad = edad
-
-
-    def mostrar_info(self):
-        return  f"{self.nombre} - {self.edad}"
 
 class Candidata(Persona):
     def __init__(self, dpi, nombre, edad, municipio, institución):
         super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
-        self.municipio = municipio
-        self.institucion = institución
-        self.calificacion = []
+        self._municipio = municipio
+        self.institucion = institución.strip()
+        self.calificaciones = []
+
 
     def agregar_calificacion(self, calificacion):
-        self.calificacion.append(calificacion)
+        self.calificaciones.append(calificacion)
 
     def promedio(self):
         if not self.calificaciones:
             return  0
-        for calificacion in self.calificaciones
+        for calificacion in self.calificaciones:
             total = calificacion.total + calificacion
         return total / len(self.calificaciones)
 
@@ -41,7 +40,20 @@ class Jurado(Persona):
         super().__init__(dpi, nombre, edad)
         self.especialidad = especialidad
         self.metodo = metodo
+        
+class Calificacion:
+    def __init__(self, cultura, proyeccion, entrevista):
+        self.cultura = cultura
+        self.proyeccion = proyeccion
+        self.entrevista = entrevista
 
+    def total(self):
+        return (self.cultura + self.proyeccion + self.entrevista) / 3
+
+class Concurso:
+    def __init__(self):
+        self.candidatas = []
+        self.jurados = []
 
 class ReinasApp:
     def __init__(self):
@@ -54,10 +66,16 @@ class ReinasApp:
 
         tk.Label(
             self.ventana,text="♕ BIENVENIDO ♕",
-            font=("Goudy Old Style", 20, "bold"), bg="Royal blue", fg="red4", justify="center").pack(pady=10)
+            font=("Goudy Old Style", 35, "bold"), bg="Royal blue", fg="red4", justify="center").pack(pady=10)
         tk.Label(
             self.ventana,text=" Sistema de Inscripción y Evaluación de Reinas de Independencia 2025 - Quetzaltenango",
-            font=("Goudy Old Style", 20, "bold"), bg="Royal blue", fg="white", justify="center").pack(pady=10)
+            font=("Goudy Old Style", 25, "bold"), bg="Royal blue", fg="white", justify="center").pack(pady=10)
+        tk.Label(
+            self.ventana, text="Bases de Inscripción:\n 1. Las señoritas participantes deben ser originarias del departamento de Quetzaltenango \n "
+                               "2. Estar comprendidas entre los 18 y 23 años de edad \n 3. Estatura mínima 1.65 \n 4. Ser de reconocida honorabilidad \n"
+                               "5. Ser soltera, no haber procreado hijos y no haber tenido una unión de hecho \n 6. Tener facilidad de palabra, ser extrovertida, dinámica y con proyección social",
+            font=("Stencil Std", 12, "bold"), bg="royal blue", fg="white", justify="center").pack(pady=10)
+
         try:
             self.foto = tk.PhotoImage(file="xelafer2025.gif")
             tk.Label(self.ventana, image=self.foto, bg="white smoke").pack(pady=1)
@@ -67,8 +85,8 @@ class ReinasApp:
         self.ventana.mainloop()
 
     def menu(self):
-        barra = tk.Menu(self.ventana, bg="royal blue", fg="white", font=("Helvetica", 12))
-        opciones = tk.Menu(barra, tearoff=0, bg="royal blue", fg="red4", font=("Helvetica", 12) )
+        barra = tk.Menu(self.ventana, bg="blue", fg="white", font=("Helvetica", 12, "bold"))
+        opciones = tk.Menu(barra, tearoff=0, bg="red4", fg="white", font=("Helvetica", 12, "bold") )
         opciones.add_command(label="Registrar Reina", command=self.registrar_Reina)
         opciones.add_command(label="Registrar Jurado", command=self.registrar_Jurado)
         opciones.add_command(label="Registrar Calificación", command=self.registrar_calificacion)
