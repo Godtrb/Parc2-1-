@@ -1,4 +1,17 @@
 import tkinter as tk
+from tkinter import messagebox
+
+CRITERIOS = ["cultura", "proyección", "entrevista"]
+MUNICIPIOS = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepción Chiquirichapa",
+              "El Palmar", "Flores Costa Cuca", "Génova", "Huitán", "La Esperanza", "Olintepeque", "Palestina de Los Altos",
+              "Quetzaltenango", "San Francisco La Unión", "San Martín Sacatepéquez", "San Mateo", "San Miguel Sigüilá",
+              "Sibilia", "Zunil"]
+DATOS_RUTA_CANDIDATAS = "candidatas.txt"
+DATOS_RUTA_JURADOS = "jurados.txt"
+VALORES_PUNTAJE = [str(i) for i in range(0,11)]
+
+
+
 
 class ReinasApp:
     def __init__(self):
