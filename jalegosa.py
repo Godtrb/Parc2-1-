@@ -1,33 +1,31 @@
 import tkinter as tk
-from idlelib.tree import wheel_event
-
 
 class ReinasApp:
     def __init__(self):
         self.ventana = tk.Tk()
-        self.ventana.title("Reinas Quetzaltenango 2025")
+        self.ventana.title("Reinas de Independencia Xelafer 2025")
         self.ventana.geometry("500x300")
-        self.ventana.config(bg="tomato")
+        self.ventana.config(bg="royal blue")
 
         self.menu()
 
+        tk.Label(
+            self.ventana,text="♕ BIENVENIDO ♕",
+            font=("Goudy Old Style", 20, "bold"), bg="Royal blue", fg="red4", justify="center").pack(pady=10)
+        tk.Label(
+            self.ventana,text=" Sistema de Inscripción y Evaluación de Reinas de Independencia 2025 - Quetzaltenango",
+            font=("Goudy Old Style", 20, "bold"), bg="Royal blue", fg="white", justify="center").pack(pady=10)
         try:
-            self.foto = tk.PhotoImage(file="pesta.gif")
-            tk.Label(self.ventana, image=self.foto, bg="white smoke").pack(pady=10)
+            self.foto = tk.PhotoImage(file="xelafer2025.gif")
+            tk.Label(self.ventana, image=self.foto, bg="white smoke").pack(pady=1)
         except Exception as e:
             print("No se pudo cargar la imagen:", e)
 
-        tk.Label(
-            self.ventana,
-            text="Sistema de Inscripción y Evaluación de Reinas de Independencia 2025 - Quetzaltenango",
-            font=("Arial", 12, "bold"),
-            justify="center"
-        ).pack(pady=50)
 
         self.ventana.mainloop()
 
     def menu(self):
-        barra = tk.Menu(self.ventana)
+        barra = tk.Menu(self.ventana, bg="dodger blue", fg="red", font=("Helvetica", 12))
         opciones = tk.Menu(barra, tearoff=0)
         opciones.add_command(label="Registrar Reina", command=self.registrar_Reina)
         opciones.add_command(label="Registrar Jurado", command=self.registrar_Jurado)
