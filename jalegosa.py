@@ -1,10 +1,13 @@
 import tkinter as tk
+from idlelib.tree import wheel_event
+
 
 class ReinasApp:
     def __init__(self):
         self.ventana = tk.Tk()
         self.ventana.title("Reinas Quetzaltenango 2025")
         self.ventana.geometry("500x300")
+        self.ventana.config(bg=)
 
         self.menu()
 
@@ -20,9 +23,10 @@ class ReinasApp:
     def menu(self):
         barra = tk.Menu(self.ventana)
         opciones = tk.Menu(barra, tearoff=0)
-        opciones.add_command(label="Registrar Reina", command=self.inscribir_banda)
-        opciones.add_command(label="Registrar Jurado", command=self.registrar_evaluacion)
-        opciones.add_command(label="Registrar Evaluacion", command=self.listar_bandas)
+        opciones.add_command(label="Registrar Reina", command=self.registrar_Reina)
+        opciones.add_command(label="Registrar Jurado", command=self.registrar_Jurado)
+        opciones.add_command(label="Registrar Jurado", command=self.registrar_calificacion)
+        opciones.add_command(label="Registrar Evaluacion", command=self.listar_Reinas)
         opciones.add_command(label="Ver Ranking", command=self.ver_ranking)
         opciones.add_separator()
         opciones.add_command(label="Salir", command=self.ventana.quit)
