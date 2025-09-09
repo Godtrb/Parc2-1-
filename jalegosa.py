@@ -21,7 +21,6 @@ class ReinasApp:
         except Exception as e:
             print("No se pudo cargar la imagen:", e)
 
-
         self.ventana.mainloop()
 
     def menu(self):
