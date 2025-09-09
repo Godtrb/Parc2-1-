@@ -10,7 +10,37 @@ DATOS_RUTA_CANDIDATAS = "candidatas.txt"
 DATOS_RUTA_JURADOS = "jurados.txt"
 VALORES_PUNTAJE = [str(i) for i in range(0,11)]
 
+class Persona:
+    def __init__(self, dpi, nombre: str, edad: int):
+        self.nombre = nombre.strip()
+        self.edad = edad
 
+
+    def mostrar_info(self):
+        return  f"{self.nombre} - {self.edad}"
+
+class Candidata(Persona):
+    def __init__(self, dpi, nombre, edad, municipio, institución):
+        super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
+        self.municipio = municipio
+        self.institucion = institución
+        self.calificacion = []
+
+    def agregar_calificacion(self, calificacion):
+        self.calificacion.append(calificacion)
+
+    def promedio(self):
+        if not self.calificaciones:
+            return  0
+        for calificacion in self.calificaciones
+            total = calificacion.total + calificacion
+        return total / len(self.calificaciones)
+
+class Jurado(Persona):
+    def __init__(self, dpi, nombre, edad, especialidad, metodo):
+        super().__init__(dpi, nombre, edad)
+        self.especialidad = especialidad
+        self.metodo = metodo
 
 
 class ReinasApp:
