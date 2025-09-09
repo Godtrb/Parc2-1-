@@ -7,9 +7,15 @@ class ReinasApp:
         self.ventana = tk.Tk()
         self.ventana.title("Reinas Quetzaltenango 2025")
         self.ventana.geometry("500x300")
-        self.ventana.config(bg=)
+        self.ventana.config(bg="tomato")
 
         self.menu()
+
+        try:
+            self.foto = tk.PhotoImage(file="pesta.gif")
+            tk.Label(self.ventana, image=self.foto, bg="white smoke").pack(pady=10)
+        except Exception as e:
+            print("No se pudo cargar la imagen:", e)
 
         tk.Label(
             self.ventana,
