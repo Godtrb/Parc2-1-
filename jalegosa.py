@@ -201,21 +201,172 @@ class ReinasApp:
         institucion = tk.Entry(ventana);
         institucion.pack(pady=2)
 
-    def registrar_Jurado(self):
-        print("Se abrió la ventana: Registro Jurado")
-        tk.Toplevel(self.ventana).title("Registrar Jurado")
+        def guardar():
+            if not dpi.get() or not nombre.get() or not edad.get() or not municipio.get() or not institucion.get():
+                messagebox.showwarning("Atención", "Todos los campos son obligatorios")
+                return
+            if nombre.get().isdigit():
+                messagebox.showwarning("Atención", "El nombre no puede ser un número")
+                return
+            try:
+                edad_val = int(edad.get())
+            except:
+                messagebox.showwarning("Atención", "Edad debe ser numérica")
+                return
+            if edad_val < 18 or edad_val > 23:
+                messagebox.showwarning("Atención", "La edad debe estar entre 18 y 23 años")
+                return
+            candidata = Candidata(dpi.get(), nombre.get(), edad_val, municipio.get(), institucion.get())
+            if self.concurso.registrar_candidata(candidata):
+                messagebox.showinfo("Éxito", "Candidata registrada correctamente")
+                ventana.destroy()
+
+        tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
+        tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
+
+    def registrar_jurado(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Registrar Jurado")
+        ventana.config(bg="LightBlue3")
+
+        tk.Label(ventana, text="Código:").pack(pady=2)
+        dpi = tk.Entry(ventana);
+        dpi.pack(pady=2)
+        tk.Label(ventana, text="Nombre:").pack(pady=2)
+        nombre = tk.Entry(ventana);
+        nombre.pack(pady=2)
+        tk.Label(ventana, text="Edad:").pack(pady=2)
+        edad = tk.Entry(ventana);
+        edad.pack(pady=2)
+        tk.Label(ventana, text="Especialidad:").pack(pady=2)
+        especialidad = tk.Entry(ventana);
+        especialidad.pack(pady=2)
+        tk.Label(ventana, text="Método:").pack(pady=2)
+        metodo = tk.Entry(ventana);
+        metodo.pack(pady=2)
+
+        def guardar():
+            if not dpi.get() or not nombre.get() or not edad.get() or not especialidad.get() or not metodo.get():
+                messagebox.showwarning("Atención", "Todos los campos son obligatorios")
+                return
+            if nombre.get().isdigit():
+                messagebox.showwarning("Atención", "El nombre no puede ser un número")
+                return
+            try:
+                edad_val = int(edad.get())
+            except:
+                messagebox.showwarning("Atención", "Edad debe ser numérica")
+                return
+            jurado = Jurado(dpi.get(), nombre.get(), edad_val, especialidad.get(), metodo.get())
+            if self.concurso.registrar_jurado(jurado):
+                messagebox.showinfo("Éxito", "Jurado registrado correctamente")
+                ventana.destroy()
+
+        tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
+        tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
 
     def registrar_calificacion(self):
-        print("Se abrió la ventana: Registrar Calificación")
-        tk.Toplevel(self.ventana).title("Registrar Calificación")
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Registrar Calificación")
+        ventana.config(bg="snow")
 
-    def listar_Reinas(self):
-        print("Se abrió la ventana: Listar Reinas")
-        tk.Toplevel(self.ventana).title("Listado de Reinas")
+        tk.Label(ventana, text="Candidata:").pack(pady=2)
+        candidata_combo = ttk.Combobox(ventana, values=[c.nombre for c in self.concurso.candidatas.values()])
+        candidata_combo.pack(pady=2)
 
-    def ver_ranking(self):
-        print("Se abrió la ventana: Ranking Final")
-        tk.Toplevel(self.ventana).title("Ranking Final")
+        tk.Label(ventana, text="Jurado:").pack(pady=2)
+        jurado_combo = ttk.Combobox(ventana, values=[j.nombre for j in self.concurso.jurados.values()])
+        jurado_combo.pack(pady=2)
+
+        tk.Label(ventana, text="Cultura:").pack(pady=2)
+        cultura = tk.Entry(ventana);
+        cultura.pack(pady=2)
+        tk.Label(ventana, text="Proyección:").pack(pady=2)
+        proyeccion = tk.Entry(ventana);
+        proyeccion.pack(pady=2)
+        tk.Label(ventana, text="Entrevista:").pack(pady=2)
+        entrevista = tk.Entry(ventana);
+        entrevista.pack(pady=2)
+
+        def guardar():
+            if not candidata_combo.get() or not jurado_combo.get() or not cultura.get() or not proyeccion.get() or not entrevista.get():
+                messagebox.showwarning("Atención", "Todos los campos son obligatorios")
+                return
+            try:
+                cultura_val = int(cultura.get())
+                proy_val = int(proyeccion.get())
+                ent_val = int(entrevista.get())
+            except:
+                messagebox.showwarning("Atención", "Las calificaciones deben ser numéricas")
+                return
+
+            candidata = next((c for c in self.concurso.candidatas.values() if c.nombre == candidata_combo.get()), None)
+            jurado = next((j for j in self.concurso.jurados.values() if j.nombre == jurado_combo.get()), None)
+
+            if not candidata or not jurado:
+                messagebox.showwarning("Atención", "Seleccione datos válidos")
+                return
+
+            calificacion = {'cultura': cultura_val,
+                            'proyeccion': proy_val,
+                            'entrevista': ent_val,
+                            'jurado': jurado.nombre,
+                            'metodo': jurado.metodo}
+
+            if candidata.agregar_calificacion(calificacion):
+                self.concurso.guardar_candidatas()
+                messagebox.showinfo("Éxito", "Calificación registrada correctamente")
+                ventana.destroy()
+            else:
+                messagebox.showwarning("Atención", "Ese jurado ya calificó a esta candidata")
+
+        tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
+        tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
+
+    def mostrar_ranking(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Ranking")
+        ventana.config(bg="MistyRose2")
+
+        ranking = self.concurso.ranking()
+        posiciones = ["Ganadora", "Primera Finalista", "Segunda Finalista", "Tercera Finalista"]
+
+        for i, candidata in enumerate(ranking):
+            tk.Label(ventana, text=f"{posiciones[i]}: {candidata.nombre} - Promedio: {candidata.promedio():.2f}").pack(
+                pady=2)
+
+    def listar_candidatas(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Listado de Candidatas")
+        ventana.config(bg="wheat1")
+
+        for c in self.concurso.candidatas.values():
+            tk.Label(ventana, text=f"{c.dpi} - {c.nombre} ({c.edad} años) - {c.municipio} - {c.institucion}").pack(
+                pady=2)
+
+    def listar_jurados(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Listado de Jurados")
+        ventana.config(bg="wheat1")
+
+        for j in self.concurso.jurados.values():
+            tk.Label(ventana, text=f"{j.dpi} - {j.nombre} ({j.edad} años) - {j.especialidad} - {j.metodo}").pack(
+                pady=2)
+
+    def mostrar_calificaciones(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Calificaciones")
+        ventana.config(bg="plum2")
+
+        for c in self.concurso.candidatas.values():
+            if c.calificaciones:
+                tk.Label(ventana, text=f"Candidata: {c.nombre}", font=("Helvetica", 10, "bold")).pack(pady=2)
+                for cal in c.calificaciones:
+                    tk.Label(ventana,
+                             text=f"Jurado: {cal['jurado']} | Cultura: {cal['cultura']} | Proyección: {cal['proyeccion']} | Entrevista: {cal['entrevista']}").pack(
+                        pady=2)
+            else:
+                tk.Label(ventana, text=f"Candidata: {c.nombre} - Sin calificaciones").pack(pady=2)
 
 
 if __name__ == "__main__":
