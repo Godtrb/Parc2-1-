@@ -1,6 +1,7 @@
 import os.path
 import tkinter as tk
 from tkinter import messagebox
+from tokenize import maybe
 from typing import Optional, Dict, List
 
 CRITERIOS = ["cultura", "proyección", "entrevista"]
@@ -121,6 +122,17 @@ class Concurso:
         self.jurados[jurado.dpi] = jurado
         self.guardar_jurados()
         return True
+
+    def ranking(self):
+        def quick_sort(lista):
+            if len(lista) <=1:
+                return lista
+            pivote = [0]
+            menores = [x for x in lista [1:] if x.promedio() <= pivote.promedio()]
+            mayores = [x for x in lista[1:] if x.promedio()> pivote.promedio()]
+            return quick_sort(mayores) + [pivote] + quick_sort(menores)
+        ordenadas = quick_sort(list(self.candidatas.values()))
+        return  ordenadas[:4]
 
 class ReinasApp:
     def __init__(self):
