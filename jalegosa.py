@@ -17,7 +17,7 @@ class Persona:
 class Candidata(Persona):
     def __init__(self, dpi, nombre, edad, municipio, institucion):
         super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
-        self._municipio = municipio
+        self.municipio = municipio
         self.institucion = institucion.strip()
         self.calificaciones = []
 
@@ -63,24 +63,25 @@ class Concurso:
                     linea = linea.strip()
                     if linea:
                         partes = linea.split(":")
-                        if len(partes) >=5:
+                        if len(partes) >= 5:
                             dpi, nombre, edad, municipio, institucion = partes[:5]
-                            candidata = candidata(dpi, nombre, int(edad), municipio, institucion)
-                            if len(partes)>5:
+                            candidata_obj = Candidata(dpi, nombre, int(edad), municipio, institucion)
+
+                            if len(partes) > 5:
                                 califs = partes[5].split(";")
                                 for c in califs:
                                     if c:
                                         valores = c.split(",")
-                                        if len(valores)==5:
-                                            cal = {'cultura': int(valores[0]),
-                                                   'proyeccion': int(valores[1]),
-                                                   'entrevista': int(valores[2]),
-                                                   'jurado': int(valores[3]),
-                                                   'metodo': int(valores[4]),
-                                                   }
-                                            candidata.calificaciones.append(cal)
-                            self.candidatas[dpi] = candidata
-
+                                        if len(valores) == 5:
+                                            cal = {
+                                                'cultura': int(valores[0]),
+                                                'proyeccion': int(valores[1]),
+                                                'entrevista': int(valores[2]),
+                                                'jurado': valores[3].strip(),
+                                                'metodo': valores[4].strip()
+                                            }
+                                            candidata_obj.calificaciones.append(cal)
+                            self.candidatas[dpi] = candidata_obj
     def guardar_candidatas(self):
         with open("candidatas.txt", "w", encoding="utf-8") as f:
             for c in self.candidatas.values():
@@ -120,14 +121,15 @@ class Concurso:
 
     def ranking(self):
         def quick_sort(lista):
-            if len(lista) <=1:
+            if len(lista) <= 1:
                 return lista
-            pivote = [0]
-            menores = [x for x in lista [1:] if x.promedio() <= pivote.promedio()]
-            mayores = [x for x in lista[1:] if x.promedio()> pivote.promedio()]
+            pivote = lista[0]
+            menores = [x for x in lista[1:] if x.promedio() <= pivote.promedio()]
+            mayores = [x for x in lista[1:] if x.promedio() > pivote.promedio()]
             return quick_sort(mayores) + [pivote] + quick_sort(menores)
+
         ordenadas = quick_sort(list(self.candidatas.values()))
-        return  ordenadas[:4]
+        return ordenadas[:4]
 
 class ReinasApp:
     def __init__(self):
@@ -185,21 +187,23 @@ class ReinasApp:
         ventana.config(bg="burlywood1")
 
 
-        tk.Label(ventana, text="Código:", font = ("Stencil Std", 12, "bold"), bg = "royal blue", fg = "white", justify = "center").pack(pady=2)
+
+        tk.Label(ventana, text="DPI:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         dpi = tk.Entry(ventana);
         dpi.pack(pady=2)
-        tk.Label(ventana, text="Nombre:").pack(pady=2)
+        tk.Label(ventana, text="Nombre:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         nombre = tk.Entry(ventana);
         nombre.pack(pady=2)
-        tk.Label(ventana, text="Edad:").pack(pady=2)
+        tk.Label(ventana, text="Edad:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         edad = tk.Entry(ventana);
         edad.pack(pady=2)
-        tk.Label(ventana, text="Municipio:").pack(pady=2)
+        tk.Label(ventana, text="Municipio:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         municipio = ttk.Combobox(ventana, values=self.municipios);
         municipio.pack(pady=2)
-        tk.Label(ventana, text="Institución:").pack(pady=2)
+        tk.Label(ventana, text="Institución:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         institucion = tk.Entry(ventana);
         institucion.pack(pady=2)
+
 
         def guardar():
             if not dpi.get() or not nombre.get() or not edad.get() or not municipio.get() or not institucion.get():
@@ -229,7 +233,7 @@ class ReinasApp:
         ventana.title("Registrar Jurado")
         ventana.config(bg="LightBlue3")
 
-        tk.Label(ventana, text="Código:").pack(pady=2)
+        tk.Label(ventana, text="DPI:").pack(pady=2)
         dpi = tk.Entry(ventana);
         dpi.pack(pady=2)
         tk.Label(ventana, text="Nombre:").pack(pady=2)
@@ -367,7 +371,7 @@ class ReinasApp:
                 tk.Label(ventana, text=f"Candidata: {c.nombre}", font=("Helvetica", 10, "bold")).pack(pady=2)
                 for cal in c.calificaciones:
                     tk.Label(ventana,
-                             text=f"Jurado: {cal['jurado']} | Cultura: {cal['cultura']} | Proyección: {cal['proyeccion']} | Entrevista: {cal['entrevista']}").pack(
+                             text=f"Jurado: {cal['jurado']} - Cultura: {cal['cultura']} - Proyección: {cal['proyeccion']} - Entrevista: {cal['entrevista']}").pack(
                         pady=2)
             else:
                 tk.Label(ventana, text=f"Candidata: {c.nombre} - Sin calificaciones").pack(pady=2)
