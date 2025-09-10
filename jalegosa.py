@@ -2,20 +2,19 @@ import os.path
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-
 class Persona:
     def __init__(self, dpi, nombre, edad):
         self.dpi = dpi
         self.nombre = nombre.strip()
         self.edad = edad
 
-
 class Candidata(Persona):
     def __init__(self, dpi, nombre, edad, municipio, institucion):
-        super().__init__(dpi, nombre, edad)  # Luis con esto heredamos de la clase padre
+        super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
         self.municipio = municipio
         self.institucion = institucion.strip()
         self.calificaciones = []
+
 
     def agregar_calificacion(self, calificacion):
         for c in self.calificaciones:
@@ -26,18 +25,15 @@ class Candidata(Persona):
 
     def promedio(self):
         if not self.calificaciones:
-            return 0
-        return sum((c['cultura'] + c['proyeccion'] + c['entrevista']) / 3 for c in self.calificaciones) / len(
-            self.calificaciones)
-
+            return  0
+        return sum((c['cultura'] + c['proyeccion'] + c['entrevista'])/3 for c in self.calificaciones)/len(self.calificaciones)
 
 class Jurado(Persona):
     def __init__(self, dpi, nombre, edad, especialidad, metodo):
         super().__init__(dpi, nombre, edad)
         self.especialidad = especialidad
         self.metodo = metodo
-
-
+        
 """class Calificacion:
     def __init__(self, cultura, proyeccion, entrevista):
         self.cultura = cultura
@@ -47,8 +43,6 @@ class Jurado(Persona):
     def total(self):
         return (self.cultura + self.proyeccion + self.entrevista) / 3
 """
-
-
 class Concurso:
     def __init__(self):
         self.candidatas = {}
@@ -82,36 +76,32 @@ class Concurso:
                                             }
                                             candidata_obj.calificaciones.append(cal)
                             self.candidatas[dpi] = candidata_obj
-
     def guardar_candidatas(self):
         with open("candidatas.txt", "w", encoding="utf-8") as f:
             for c in self.candidatas.values():
-                califs_str = ";".join(
-                    [f"{cal['cultura']}, {cal['proyeccion']}, {cal['entrevista']}, {cal['jurado']}, {cal['metodo']}" for
-                     cal in c.calificaciones])
+                califs_str = ";".join([f"{cal['cultura']}, {cal['proyeccion']}, {cal['entrevista']}, {cal['jurado']}, {cal['metodo']}" for cal in c.calificaciones])
                 f.write(f"{c.dpi}:{c.nombre}:{c.edad}:{c.municipio}:{c.institucion}:{califs_str}\n ")
-
 
     def cargar_jurados(self):
         if os.path.exists("jurados.txt"):
-            with open("jurados.txt", "r", encoding="utf-8") as f:
+            with open("jurados.txt", "r", encoding="utf-8") as  f:
                 for linea in f:
                     linea = linea.strip()
                     if linea:
                         partes = linea.split(":")
-                        if len(partes) == 5:
+                        if len(partes)==5:
                             dpi, nombre, edad, especialidad, metodo = partes
                             self.jurados[dpi] = Jurado(dpi, nombre, int(edad), especialidad, metodo)
 
     def guardar_jurados(self):
-        with open("jurados.txt", "w", encoding="utf-8") as f:
+        with open("jurados.txt", "w", encoding = "utf-8") as f:
             for j in self.jurados.values():
                 f.write(f"{j.dpi}:{j.nombre}:{j.edad}:{j.especialidad}:{j.metodo}\n")
 
     def registrar_candidata(self, candidata):
         if candidata.dpi in self.candidatas:
             messagebox.showwarning("Error", f"La candidata ya está registrada")
-            return False
+            return  False
         self.candidatas[candidata.dpi] = candidata
         self.guardar_candidatas()
         return True
@@ -135,7 +125,6 @@ class Concurso:
         ordenadas = quick_sort(list(self.candidatas.values()))
         return ordenadas[:4]
 
-
 class ReinasApp:
     def __init__(self):
         self.ventana = tk.Tk()
@@ -144,25 +133,23 @@ class ReinasApp:
         self.ventana.config(bg="royal blue")
         self.concurso = Concurso()
         self.municipios = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepción Chiquirichapa",
-                           "El Palmar", "Flores Costa Cuca", "Génova", "Huitán", "La Esperanza", "Olintepeque",
-                           "Palestina de Los Altos",
-                           "Quetzaltenango", "San Francisco La Unión", "San Martín Sacatepéquez", "San Mateo",
-                           "San Miguel Sigüilá",
-                           "Sibilia", "Zunil"]
+              "El Palmar", "Flores Costa Cuca", "Génova", "Huitán", "La Esperanza", "Olintepeque", "Palestina de Los Altos",
+              "Quetzaltenango", "San Francisco La Unión", "San Martín Sacatepéquez", "San Mateo", "San Miguel Sigüilá",
+              "Sibilia", "Zunil"]
+
 
         self.menu()
 
         tk.Label(
-            self.ventana, text="♕ BIENVENIDO ♕",
+            self.ventana,text="♕ BIENVENIDO ♕",
             font=("Goudy Old Style", 35, "bold"), bg="Royal blue", fg="red4", justify="center").pack(pady=10)
         tk.Label(
-            self.ventana, text=" Sistema de Inscripción y Evaluación de Reinas de Independencia 2025 - Quetzaltenango",
+            self.ventana,text=" Sistema de Inscripción y Evaluación de Reinas de Independencia 2025 - Quetzaltenango",
             font=("Goudy Old Style", 25, "bold"), bg="Royal blue", fg="white", justify="center").pack(pady=10)
         tk.Label(
-            self.ventana,
-            text="Bases de Inscripción:\n 1. Las señoritas participantes deben ser originarias del departamento de Quetzaltenango \n "
-                 "2. Estar comprendidas entre los 18 y 23 años de edad \n 3. Estatura mínima 1.65 \n 4. Ser de reconocida honorabilidad \n"
-                 "5. Ser soltera, no haber procreado hijos y no haber tenido una unión de hecho \n 6. Tener facilidad de palabra, ser extrovertida, dinámica y con proyección social",
+            self.ventana, text="Bases de Inscripción:\n 1. Las señoritas participantes deben ser originarias del departamento de Quetzaltenango \n "
+                               "2. Estar comprendidas entre los 18 y 23 años de edad \n 3. Estatura mínima 1.65 \n 4. Ser de reconocida honorabilidad \n"
+                               "5. Ser soltera, no haber procreado hijos y no haber tenido una unión de hecho \n 6. Tener facilidad de palabra, ser extrovertida, dinámica y con proyección social",
             font=("Stencil Std", 12, "bold"), bg="royal blue", fg="white", justify="center").pack(pady=10)
 
         try:
@@ -175,7 +162,7 @@ class ReinasApp:
 
     def menu(self):
         barra = tk.Menu(self.ventana, bg="blue", fg="white", font=("Helvetica", 12, "bold"))
-        opciones = tk.Menu(barra, tearoff=0, bg="red4", fg="white", font=("Helvetica", 12, "bold"))
+        opciones = tk.Menu(barra, tearoff=0, bg="red4", fg="white", font=("Helvetica", 12, "bold") )
         opciones.add_command(label="Registrar Candidata", command=self.registrar_candidata)
         opciones.add_command(label="Registrar Jurado", command=self.registrar_jurado)
         opciones.add_command(label="Registrar Calificación", command=self.registrar_calificacion)
@@ -185,7 +172,7 @@ class ReinasApp:
         opciones.add_command(label="Ver Ranking", command=self.mostrar_ranking)
         opciones.add_separator()
         opciones.add_command(label="Salir", command=self.ventana.quit)
-        barra.add_cascade(label="Opciones", menu=opciones)
+        barra.add_cascade(label="Opciones", menu=opciones )
         self.ventana.config(menu=barra)
 
     def registrar_candidata(self):
@@ -193,26 +180,23 @@ class ReinasApp:
         ventana.title("Registrar Candidata")
         ventana.config(bg="burlywood1")
 
-        tk.Label(ventana, text="DPI:", font=("Helvetica", 16, "bold"), bg="burlywood1", fg="white",
-                 justify="center").pack(pady=2)
+
+        tk.Label(ventana, text="DPI:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         dpi = tk.Entry(ventana);
         dpi.pack(pady=2)
-        tk.Label(ventana, text="Nombre:", font=("Helvetica", 16, "bold"), bg="burlywood1", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Nombre:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         nombre = tk.Entry(ventana);
         nombre.pack(pady=2)
-        tk.Label(ventana, text="Edad:", font=("Helvetica", 16, "bold"), bg="burlywood1", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Edad:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         edad = tk.Entry(ventana);
         edad.pack(pady=2)
-        tk.Label(ventana, text="Municipio:", font=("Helvetica", 16, "bold"), bg="burlywood1", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Municipio:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         municipio = ttk.Combobox(ventana, values=self.municipios);
         municipio.pack(pady=2)
-        tk.Label(ventana, text="Institución:", font=("Helvetica", 16, "bold"), bg="burlywood1", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Institución:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         institucion = tk.Entry(ventana);
         institucion.pack(pady=2)
+
 
         def guardar():
             if not dpi.get() or not nombre.get() or not edad.get() or not municipio.get() or not institucion.get():
@@ -253,24 +237,19 @@ class ReinasApp:
         ventana.title("Registrar Jurado")
         ventana.config(bg="LightBlue3")
 
-        tk.Label(ventana, text="DPI:", font=("Helvetica", 16, "bold"), bg="LightBlue3", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="DPI:", font = ("Helvetica", 16, "bold"), bg = "LightBlue3", fg = "white", justify = "center").pack(pady=2)
         dpi = tk.Entry(ventana);
         dpi.pack(pady=2)
-        tk.Label(ventana, text="Nombre:", font=("Helvetica", 16, "bold"), bg="LightBlue3", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Nombre:", font = ("Helvetica", 16, "bold"), bg = "LightBlue3", fg = "white", justify = "center").pack(pady=2)
         nombre = tk.Entry(ventana);
         nombre.pack(pady=2)
-        tk.Label(ventana, text="Edad:", font=("Helvetica", 16, "bold"), bg="LightBlue3", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Edad:", font = ("Helvetica", 16, "bold"), bg = "LightBlue3", fg = "white", justify = "center").pack(pady=2)
         edad = tk.Entry(ventana);
         edad.pack(pady=2)
-        tk.Label(ventana, text="Especialidad:", font=("Helvetica", 16, "bold"), bg="LightBlue3", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Especialidad:", font = ("Helvetica", 16, "bold"), bg = "LightBlue3", fg = "white", justify = "center").pack(pady=2)
         especialidad = tk.Entry(ventana);
         especialidad.pack(pady=2)
-        tk.Label(ventana, text="Método:", font=("Helvetica", 16, "bold"), bg="LightBlue3", fg="white",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Método:", font = ("Helvetica", 16, "bold"), bg = "LightBlue3", fg = "white", justify = "center").pack(pady=2)
         metodo = tk.Entry(ventana);
         metodo.pack(pady=2)
 
@@ -310,28 +289,23 @@ class ReinasApp:
         ventana.title("Registrar Calificación")
         ventana.config(bg="snow")
 
-        tk.Label(ventana, text="Candidata:", font=("Helvetica", 16, "bold"), bg="snow", fg="royal blue",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Candidata:", font = ("Helvetica", 16, "bold"), bg = "snow", fg = "royal blue", justify = "center").pack(pady=2)
         candidata_combo = ttk.Combobox(ventana, values=[c.nombre for c in self.concurso.candidatas.values()])
         candidata_combo.pack(pady=2)
 
-        tk.Label(ventana, text="Jurado:", font=("Helvetica", 16, "bold"), bg="snow", fg="royal blue",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Jurado:", font = ("Helvetica", 16, "bold"), bg = "snow", fg = "royal blue", justify = "center").pack(pady=2)
         jurado_combo = ttk.Combobox(ventana, values=[j.nombre for j in self.concurso.jurados.values()])
         jurado_combo.pack(pady=2)
 
-        tk.Label(ventana, text="Cultura:", font=("Helvetica", 16, "bold"), bg="snow", fg="royal blue",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Cultura:", font = ("Helvetica", 16, "bold"), bg = "snow", fg = "royal blue", justify = "center").pack(pady=2)
         cultura = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         cultura.pack(pady=2)
 
-        tk.Label(ventana, text="Proyección:", font=("Helvetica", 16, "bold"), bg="snow", fg="royal blue",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Proyección:", font = ("Helvetica", 16, "bold"), bg = "snow", fg = "royal blue", justify = "center").pack(pady=2)
         proyeccion = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         proyeccion.pack(pady=2)
 
-        tk.Label(ventana, text="Entrevista:", font=("Helvetica", 16, "bold"), bg="snow", fg="royal blue",
-                 justify="center").pack(pady=2)
+        tk.Label(ventana, text="Entrevista:", font = ("Helvetica", 16, "bold"), bg = "snow", fg = "royal blue", justify = "center").pack(pady=2)
         entrevista = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         entrevista.pack(pady=2)
 
@@ -349,6 +323,7 @@ class ReinasApp:
                 cultura_val.focus_set()
 
                 return
+
 
             candidata = next((c for c in self.concurso.candidatas.values() if c.nombre == candidata_combo.get()), None)
             jurado = next((j for j in self.concurso.jurados.values() if j.nombre == jurado_combo.get()), None)
@@ -373,6 +348,7 @@ class ReinasApp:
             else:
                 messagebox.showwarning("Atención", f"El jurado {jurado.nombre} ya calificó a esta candidata")
 
+
         tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
         tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
         try:
@@ -396,8 +372,8 @@ class ReinasApp:
             else:
                 font_style = ("Helvetica", 16)
 
-            tk.Label(ventana, text=f"{posiciones[i]}: {candidata.nombre} - Promedio: {candidata.promedio():.2f}",
-                     font=font_style, fg="royal blue", bg="MistyRose2", justify="center").pack(
+
+            tk.Label(ventana, text=f"{posiciones[i]}: {candidata.nombre} - Promedio: {candidata.promedio():.2f}", font = font_style, fg="royal blue", bg = "MistyRose2", justify = "center").pack(
                 pady=2)
 
     def listar_candidatas(self):
@@ -406,8 +382,7 @@ class ReinasApp:
         ventana.config(bg="wheat1")
 
         for c in self.concurso.candidatas.values():
-            tk.Label(ventana, text=f"{c.dpi} - {c.nombre} ({c.edad} años) - {c.municipio} - {c.institucion}",
-                     font=("Helvetica", 16, "bold"), bg="wheat1", fg="royal blue", justify="center").pack(
+            tk.Label(ventana, text=f"{c.dpi} - {c.nombre} ({c.edad} años) - {c.municipio} - {c.institucion}", font = ("Helvetica", 16, "bold"), bg = "wheat1", fg = "royal blue", justify = "center").pack(
                 pady=2)
 
     def listar_jurados(self):
@@ -416,8 +391,7 @@ class ReinasApp:
         ventana.config(bg="wheat1")
 
         for j in self.concurso.jurados.values():
-            tk.Label(ventana, text=f"{j.dpi} - {j.nombre} ({j.edad} años) - {j.especialidad} - {j.metodo}",
-                     font=("Helvetica", 16, "bold"), bg="wheat1", fg="royal blue", justify="center").pack(
+            tk.Label(ventana, text=f"{j.dpi} - {j.nombre} ({j.edad} años) - {j.especialidad} - {j.metodo}", font = ("Helvetica", 16, "bold"), bg = "wheat1", fg = "royal blue", justify = "center").pack(
                 pady=2)
 
     def mostrar_calificaciones(self):
@@ -427,16 +401,13 @@ class ReinasApp:
 
         for c in self.concurso.candidatas.values():
             if c.calificaciones:
-                tk.Label(ventana, text=f"Candidata: {c.nombre}", font=("Helvetica", 16, "bold"), bg="plum2",
-                         fg="royal blue").pack(pady=2)
+                tk.Label(ventana, text=f"Candidata: {c.nombre}", font=("Helvetica", 16, "bold"), bg = "plum2", fg = "royal blue").pack(pady=2)
                 for cal in c.calificaciones:
                     tk.Label(ventana,
-                             text=f"Jurado: {cal['jurado']} - Cultura: {cal['cultura']} - Proyección: {cal['proyeccion']} - Entrevista: {cal['entrevista']}",
-                             font=("Helvetica", 16), bg="plum2", fg="royal blue").pack(
+                             text=f"Jurado: {cal['jurado']} - Cultura: {cal['cultura']} - Proyección: {cal['proyeccion']} - Entrevista: {cal['entrevista']}", font =("Helvetica", 16), bg="plum2", fg="royal blue").pack(
                         pady=2)
             else:
-                tk.Label(ventana, text=f"Candidata: {c.nombre} - Sin calificaciones", font=("Helvetica", 16, "bold"),
-                         bg="plum2", fg="gray").pack(pady=2)
+                tk.Label(ventana, text=f"Candidata: {c.nombre} - Sin calificaciones", font=("Helvetica", 16, "bold"), bg="plum2", fg = "gray").pack(pady=2)
 
 
 if __name__ == "__main__":
