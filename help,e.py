@@ -91,6 +91,7 @@ class Concurso:
                      cal in c.calificaciones])
                 f.write(f"{c.dpi}:{c.nombre}:{c.edad}:{c.municipio}:{c.institucion}:{califs_str}\n ")
 
+
     def cargar_jurados(self):
         if os.path.exists("jurados.txt"):
             with open("jurados.txt", "r", encoding="utf-8") as f:
