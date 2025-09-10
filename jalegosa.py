@@ -279,13 +279,15 @@ class ReinasApp:
         jurado_combo.pack(pady=2)
 
         tk.Label(ventana, text="Cultura:").pack(pady=2)
-        cultura = tk.Entry(ventana);
+        cultura = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         cultura.pack(pady=2)
+
         tk.Label(ventana, text="Proyección:").pack(pady=2)
-        proyeccion = tk.Entry(ventana);
+        proyeccion = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         proyeccion.pack(pady=2)
+
         tk.Label(ventana, text="Entrevista:").pack(pady=2)
-        entrevista = tk.Entry(ventana);
+        entrevista = ttk.Combobox(ventana, values=[str(i) for i in range(1, 11)], state="readonly")
         entrevista.pack(pady=2)
 
         def guardar():
@@ -307,18 +309,20 @@ class ReinasApp:
                 messagebox.showwarning("Atención", "Seleccione datos válidos")
                 return
 
-            calificacion = {'cultura': cultura_val,
-                            'proyeccion': proy_val,
-                            'entrevista': ent_val,
-                            'jurado': jurado.nombre,
-                            'metodo': jurado.metodo}
+            calificacion = {
+                'cultura': cultura_val,
+                'proyeccion': proy_val,
+                'entrevista': ent_val,
+                'jurado': jurado.nombre,
+                'metodo': jurado.metodo
+            }
 
             if candidata.agregar_calificacion(calificacion):
                 self.concurso.guardar_candidatas()
                 messagebox.showinfo("Éxito", "Calificación registrada correctamente")
                 ventana.destroy()
             else:
-                messagebox.showwarning("Atención", "Ese jurado ya calificó a esta candidata")
+                messagebox.showwarning("Atención", f"El jurado {jurado.nombre} ya calificó a esta candidata")
 
         tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
         tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
