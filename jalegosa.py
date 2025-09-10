@@ -2,12 +2,6 @@ import os.path
 import tkinter as tk
 from tkinter import messagebox, ttk
 
-
-CRITERIOS = ["cultura", "proyección", "entrevista"]
-DATOS_RUTA_CANDIDATAS = "candidatas.txt"
-DATOS_RUTA_JURADOS = "jurados.txt"
-VALORES_CALIFICACION = [str(i) for i in range(0,11)]
-
 class Persona:
     def __init__(self, dpi, nombre, edad):
         self.dpi = dpi
