@@ -187,7 +187,6 @@ class ReinasApp:
         ventana.config(bg="burlywood1")
 
 
-
         tk.Label(ventana, text="DPI:", font = ("Helvetica", 16, "bold"), bg = "burlywood1", fg = "white", justify = "center").pack(pady=2)
         dpi = tk.Entry(ventana);
         dpi.pack(pady=2)
@@ -227,6 +226,11 @@ class ReinasApp:
 
         tk.Button(ventana, text="Guardar", command=guardar).pack(pady=5)
         tk.Button(ventana, text="Cancelar", command=ventana.destroy).pack(pady=5)
+        try:
+            self.foto = tk.PhotoImage(file="reina.gif")
+            tk.Label(ventana, image=self.foto, bg="burlywood1").pack(side="right", padx=10, pady=10)
+        except Exception as e:
+            print("No se pudo cargar la imagen:", e)
 
     def registrar_jurado(self):
         ventana = tk.Toplevel(self.ventana)
