@@ -22,12 +22,40 @@ Requerimientos mínimos:
 ##Luis 
 Clases principales,  Registro (RAMA Things)
 ```
-class Candidata(Persona):
-    def __init__(self, dpi, nombre, edad, municipio, institucion):
-        super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
-        self._municipio = municipio
-        self.institucion = institucion.strip()
-        self.calificaciones = []
+    def cargar_candidatas(self):
+        if os.path.exists("candidatas.txt"):
+            with open("candidatas.txt", "r", encoding="utf-8") as f:
+                for linea in f:
+                    linea = linea.strip()
+                    if linea:
+                        partes = linea.split(":")
+                        if len(partes) >= 5:
+                            dpi, nombre, edad, municipio, institucion = partes[:5]
+                            candidata_obj = Candidata(dpi, nombre, int(edad), municipio, institucion)
+
+                            if len(partes) > 5:
+                                califs = partes[5].split(";")
+                                for c in califs:
+                                    if c:
+                                        valores = c.split(",")
+                                        if len(valores) == 5:
+                                            cal = {
+                                                'cultura': int(valores[0]),
+                                                'proyeccion': int(valores[1]),
+                                                'entrevista': int(valores[2]),
+                                                'jurado': valores[3].strip(),
+                                                'metodo': valores[4].strip()
+                                            }
+                                            candidata_obj.calificaciones.append(cal)
+                            self.candidatas[dpi] = candidata_obj
+
+    def guardar_candidatas(self):
+        with open("candidatas.txt", "w", encoding="utf-8") as f:
+            for c in self.candidatas.values():
+                califs_str = ";".join(
+                    [f"{cal['cultura']}, {cal['proyeccion']}, {cal['entrevista']}, {cal['jurado']}, {cal['metodo']}" for
+                     cal in c.calificaciones])
+                f.write(f"{c.dpi}:{c.nombre}:{c.edad}:{c.municipio}:{c.institucion}:{califs_str}\n ")
 ```
 
 ##Jackie 
