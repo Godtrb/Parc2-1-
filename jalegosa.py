@@ -12,28 +12,30 @@ DATOS_RUTA_JURADOS = "jurados.txt"
 VALORES_CALIFICACION = [str(i) for i in range(0,11)]
 
 class Persona:
-    def __init__(self, dpi, nombre: str, edad: int):
+    def __init__(self, dpi, nombre, edad):
         self.dpi = dpi
         self.nombre = nombre.strip()
         self.edad = edad
 
 class Candidata(Persona):
-    def __init__(self, dpi, nombre, edad, municipio, institución):
+    def __init__(self, dpi, nombre, edad, municipio, institucion):
         super().__init__(dpi, nombre, edad) #Luis con esto heredamos de la clase padre
         self._municipio = municipio
-        self.institucion = institución.strip()
+        self.institucion = institucion.strip()
         self.calificaciones = []
 
 
     def agregar_calificacion(self, calificacion):
+        for c in self.calificaciones:
+            if c['jurado'] == calificacion['jurado']:
+                return False
         self.calificaciones.append(calificacion)
+        return True
 
     def promedio(self):
         if not self.calificaciones:
             return  0
-        for calificacion in self.calificaciones:
-            total = calificacion.total + calificacion
-        return total / len(self.calificaciones)
+        return sum((c['cultura'] + c['proyeccion'] + c['entrevista'])/3 for c in self.calificaciones)/len(self.calificaciones)
 
 class Jurado(Persona):
     def __init__(self, dpi, nombre, edad, especialidad, metodo):
