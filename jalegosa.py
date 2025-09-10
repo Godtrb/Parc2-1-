@@ -1,3 +1,4 @@
+import os.path
 import tkinter as tk
 from tkinter import messagebox
 from typing import Optional, Dict, List
@@ -43,7 +44,7 @@ class Jurado(Persona):
         self.especialidad = especialidad
         self.metodo = metodo
         
-class Calificacion:
+"""class Calificacion:
     def __init__(self, cultura, proyeccion, entrevista):
         self.cultura = cultura
         self.proyeccion = proyeccion
@@ -51,11 +52,75 @@ class Calificacion:
 
     def total(self):
         return (self.cultura + self.proyeccion + self.entrevista) / 3
-
+"""
 class Concurso:
     def __init__(self):
-        self.candidatas = []
-        self.jurados = []
+        self.candidatas = {}
+        self.jurados = {}
+        self.cargar_candidatas()
+        self.cargar_jurados()
+
+    def cargar_candidatas(self):
+        if os.path.exists("candidatas.txt"):
+            with open("candidatas.txt", "r", encoding="utf-8") as f:
+                for linea in f:
+                    linea = linea.strip()
+                    if linea:
+                        partes = linea.split(":")
+                        if len(partes) >=5:
+                            dpi, nombre, edad, municipio, institucion = partes[:5]
+                            candidata = candidata(dpi, nombre, int(edad), municipio, institucion)
+                            if len(partes)>5:
+                                califs = partes[5].split(";")
+                                for c in califs:
+                                    if c:
+                                        valores = c.split(",")
+                                        if len(valores)==5:
+                                            cal = {'cultura': int(valores[0]),
+                                                   'proyeccion': int(valores[1]),
+                                                   'entrevista': int(valores[2]),
+                                                   'jurado': int(valores[3]),
+                                                   'metodo': int(valores[4]),
+                                                   }
+                                            candidata.calificaciones.append(cal)
+                            self.candidatas[dpi] = candidata
+
+    def guardar_candidatas(self):
+        with open("candidatas.txt", "w", encoding="utf-8") as f:
+            for c in self.candidatas.values():
+                califs_str = ";".join([f"{cal['cultura']}, {cal['proyeccion']}, {cal['entrevista']}, {cal['jurado']}, {cal['metodo']}" for cal in c.calificaciones])
+                f.write(f"{c.dpi}:{c.nombre}:{c.edad}:{c.municipio}:{c.institucion}:{califs_str}\n ")
+
+    def cargar_jurados(self):
+        if os.path.exists("jurados.txt"):
+            with open("jurados.txt", "r", encoding="utf-8") as  f:
+                for linea in f:
+                    linea = linea.strip()
+                    if linea:
+                        partes = linea.split(":")
+                        if len(partes)==5:
+                            dpi, nombre, edad, especialidad, metodo = partes
+                            self.jurados[dpi] = Jurado(dpi, nombre, int(edad), especialidad, metodo)
+
+    def guardar_jurados(self):
+        with open("jurados.txt", "w", encoding = "utf-8") as f:
+            for j in self.jurados.values():
+                f.write(f"{j.dpi}:{j.nombre}:{j.edad}:{j.especialidad}:{j.metodo}\n")
+
+    def registrar_candidata(self, candidata):
+        if candidata.dpi in self.candidatas:
+            messagebox.showwarning("Error", f"La candidata ya está registrada")
+            return  False
+        self.candidatas[candidata.dpi] = candidata
+        self.guardar_candidatas()
+        return True
+
+    def registrar_jurado(self, jurado):
+        if jurado.dpi in self.jurados:
+            messagebox.showwarning("Error", f"Ya es miembro del Jurado Calificador")
+        self.jurados[jurado.dpi] = jurado
+        self.guardar_jurados()
+        return True
 
 class ReinasApp:
     def __init__(self):
