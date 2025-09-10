@@ -1,14 +1,9 @@
 import os.path
 import tkinter as tk
-from tkinter import messagebox
-from tokenize import maybe
-from typing import Optional, Dict, List
+from tkinter import messagebox, ttk
+
 
 CRITERIOS = ["cultura", "proyección", "entrevista"]
-MUNICIPIOS = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepción Chiquirichapa",
-              "El Palmar", "Flores Costa Cuca", "Génova", "Huitán", "La Esperanza", "Olintepeque", "Palestina de Los Altos",
-              "Quetzaltenango", "San Francisco La Unión", "San Martín Sacatepéquez", "San Mateo", "San Miguel Sigüilá",
-              "Sibilia", "Zunil"]
 DATOS_RUTA_CANDIDATAS = "candidatas.txt"
 DATOS_RUTA_JURADOS = "jurados.txt"
 VALORES_CALIFICACION = [str(i) for i in range(0,11)]
@@ -140,6 +135,12 @@ class ReinasApp:
         self.ventana.title("Reinas de Independencia Xelafer 2025")
         self.ventana.geometry("500x300")
         self.ventana.config(bg="royal blue")
+        self.concurso = Concurso()
+        self.municipios = ["Almolonga", "Cabricán", "Cajolá", "Cantel", "Colomba", "Concepción Chiquirichapa",
+              "El Palmar", "Flores Costa Cuca", "Génova", "Huitán", "La Esperanza", "Olintepeque", "Palestina de Los Altos",
+              "Quetzaltenango", "San Francisco La Unión", "San Martín Sacatepéquez", "San Mateo", "San Miguel Sigüilá",
+              "Sibilia", "Zunil"]
+
 
         self.menu()
 
@@ -166,19 +167,39 @@ class ReinasApp:
     def menu(self):
         barra = tk.Menu(self.ventana, bg="blue", fg="white", font=("Helvetica", 12, "bold"))
         opciones = tk.Menu(barra, tearoff=0, bg="red4", fg="white", font=("Helvetica", 12, "bold") )
-        opciones.add_command(label="Registrar Reina", command=self.registrar_Reina)
-        opciones.add_command(label="Registrar Jurado", command=self.registrar_Jurado)
+        opciones.add_command(label="Registrar Candidata", command=self.registrar_candidata)
+        opciones.add_command(label="Registrar Jurado", command=self.registrar_jurado)
         opciones.add_command(label="Registrar Calificación", command=self.registrar_calificacion)
-        opciones.add_command(label="Listado de Reinas", command=self.listar_Reinas)
-        opciones.add_command(label="Ver Ranking", command=self.ver_ranking)
+        opciones.add_command(label="Listado de Reinas", command=self.listar_candidatas)
+        opciones.add_command(label="Listado de Jurados", command=self.listar_jurados)
+        opciones.add_command(label="Ver Calificaciones", command=self.mostrar_calificaciones)
+        opciones.add_command(label="Ver Ranking", command=self.mostrar_ranking)
         opciones.add_separator()
         opciones.add_command(label="Salir", command=self.ventana.quit)
         barra.add_cascade(label="Opciones", menu=opciones )
         self.ventana.config(menu=barra)
 
-    def registrar_Reina(self):
-        print("Se abrió la ventana: Registrar Reina")
-        tk.Toplevel(self.ventana).title("Registrar Reina")
+    def registrar_candidata(self):
+        ventana = tk.Toplevel(self.ventana)
+        ventana.title("Registrar Candidata")
+        ventana.config(bg="burlywood1")
+
+
+        tk.Label(ventana, text="Código:", font = ("Stencil Std", 12, "bold"), bg = "royal blue", fg = "white", justify = "center").pack(pady=2)
+        dpi = tk.Entry(ventana);
+        dpi.pack(pady=2)
+        tk.Label(ventana, text="Nombre:").pack(pady=2)
+        nombre = tk.Entry(ventana);
+        nombre.pack(pady=2)
+        tk.Label(ventana, text="Edad:").pack(pady=2)
+        edad = tk.Entry(ventana);
+        edad.pack(pady=2)
+        tk.Label(ventana, text="Municipio:").pack(pady=2)
+        municipio = ttk.Combobox(ventana, values=self.municipios);
+        municipio.pack(pady=2)
+        tk.Label(ventana, text="Institución:").pack(pady=2)
+        institucion = tk.Entry(ventana);
+        institucion.pack(pady=2)
 
     def registrar_Jurado(self):
         print("Se abrió la ventana: Registro Jurado")
